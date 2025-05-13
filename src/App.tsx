@@ -3,11 +3,13 @@ import TodoCard from './components/TodoCard'
 import testData from './assets/testtodo.json'
 import type { Todo } from './types/Todo';
 import AddTodo from './components/AddTodo';
+import TodoFooter from './components/TodoFooter';
 
 
 function App() {
 
   const [todos, setTodos] = useState<Todo[]>([])
+  const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all')
 
   useEffect(() => {
     setTodos(testData);
@@ -35,14 +37,28 @@ function App() {
     setTodos(todos => [...todos, newTodo])
   }
 
+  function handleFilterChange(newFilter: 'all' | 'active' | 'completed') {
+    setFilter(newFilter)
+  }
+
+  const filteredTodos = todos.filter(todo => {
+    if (filter === 'active') return !todo.completed;
+    if (filter === 'completed') return todo.completed;
+    return true; // 'all' filter
+  })
+
+  function handleClearCompleted() {
+    setTodos(todos => todos?.filter(todos => todos.completed !== true))
+  }
+
   return (
     <div className="min-h-screen min-w-[320px] flex items-center justify-center font-sans antialiased bg-[#fff]">
       <div className="max-w-screen-xl mx-auto p-8 text-center">
-        <div className="flex flex-col items-center w-[400px]">
+        <div className="flex flex-col items-center w-[500px]">
 
           <AddTodo onAddTodo={handleAddNewTodo}></AddTodo>
 
-          {todos.map(todo => (
+          {filteredTodos.map(todo => (
             <TodoCard
               key={todo.id}
               id={todo.id}
@@ -54,6 +70,14 @@ function App() {
             >
             </TodoCard>
           ))}
+
+          <TodoFooter
+            activeCount={todos.filter(todos => todos.completed === false).length}
+            completedCount={3}
+            filter={filter}
+            onFilterChange={handleFilterChange}
+            onClearCompleted={handleClearCompleted}
+          ></TodoFooter>
         </div>
       </div>
     </div>
