@@ -27,15 +27,12 @@ function App() {
 
   function handleAddNewTodo(title: string) {
     const newId = crypto.randomUUID().toString()
-
     const newTodo: Todo = {
       id: newId,
       title: title,
       completed: false
     }
-
     setTodos(todos => [...todos, newTodo])
-
   }
 
   return (
@@ -45,7 +42,7 @@ function App() {
 
           <AddTodo onAddTodo={handleAddNewTodo}></AddTodo>
 
-          {todos?.map(todo => (
+          {todos.map(todo => (
             <TodoCard
               key={todo.id}
               id={todo.id}

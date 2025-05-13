@@ -19,6 +19,7 @@ const TodoCard: React.FC<TodoCardProps> = ({
 }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState(title);
+    const [isHovering, setIsHovering] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -75,6 +76,8 @@ const TodoCard: React.FC<TodoCardProps> = ({
             className={`flex items-center p-3 rounded-md shadow-sm border border-gray-200 mb-2 cursor-pointer hover:bg-gray-50 transition-colors w-full ${completed ? 'bg-gray-50' : 'bg-white'
                 }`}
             onClick={handleCardClick}
+            onMouseOver={() => setIsHovering(true)}
+            onMouseOut={() => setIsHovering(false)}
         >
             <div className="checkbox-container mr-3 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                 <div
@@ -109,7 +112,7 @@ const TodoCard: React.FC<TodoCardProps> = ({
                 )}
             </div>
 
-            <div>
+            {isHovering &&
                 <button type="button"
                     className="
                         focus:outline-none 
@@ -122,14 +125,14 @@ const TodoCard: React.FC<TodoCardProps> = ({
                         rounded-lg
                         text-sm
                         px-1
-                        py-1
+                        py-0.5
                         dark:bg-red-500 dark:hover:bg-red-700 dark:focus:ring-red-900"
                     onClick={handleDeleteClick}
                 >
                     X
                 </button>
+            }
 
-            </div>
         </div>
     );
 };
