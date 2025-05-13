@@ -6,6 +6,7 @@ interface TodoCardProps {
     completed: boolean;
     onToggleComplete: (id: string) => void;
     onUpdateTitle: (id: string, newTitle: string) => void;
+    onDelete: (id: string) => void;
 }
 
 const TodoCard: React.FC<TodoCardProps> = ({
@@ -14,6 +15,7 @@ const TodoCard: React.FC<TodoCardProps> = ({
     completed,
     onToggleComplete,
     onUpdateTitle,
+    onDelete,
 }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState(title);
@@ -64,9 +66,13 @@ const TodoCard: React.FC<TodoCardProps> = ({
         onToggleComplete(id);
     };
 
+    const handleDeleteClick = () => {
+        onDelete(id);
+    }
+
     return (
         <div
-            className={`flex items-center p-3 rounded-md shadow-sm border border-gray-200 mb-2 cursor-pointer hover:bg-gray-50 transition-colors ${completed ? 'bg-gray-50' : 'bg-white'
+            className={`flex items-center p-3 rounded-md shadow-sm border border-gray-200 mb-2 cursor-pointer hover:bg-gray-50 transition-colors w-full ${completed ? 'bg-gray-50' : 'bg-white'
                 }`}
             onClick={handleCardClick}
         >
@@ -84,7 +90,7 @@ const TodoCard: React.FC<TodoCardProps> = ({
                 </div>
             </div>
 
-            <div className="flex-grow">
+            <div className="flex-grow text-left">
                 {isEditing ? (
                     <input
                         ref={inputRef}
@@ -101,6 +107,28 @@ const TodoCard: React.FC<TodoCardProps> = ({
                         {title}
                     </span>
                 )}
+            </div>
+
+            <div>
+                <button type="button"
+                    className="
+                        focus:outline-none 
+                        text-white
+                        bg-red-700
+                        hover:bg-red-800
+                        focus:ring-4
+                        focus:ring-red-300
+                        font-medium
+                        rounded-lg
+                        text-sm
+                        px-1
+                        py-1
+                        dark:bg-red-500 dark:hover:bg-red-700 dark:focus:ring-red-900"
+                    onClick={handleDeleteClick}
+                >
+                    X
+                </button>
+
             </div>
         </div>
     );

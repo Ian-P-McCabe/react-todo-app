@@ -21,6 +21,10 @@ function App() {
     setTodos(todos => todos?.map(todo => todo.id === id ? { ...todo, title: newTitle } : todo))
   }
 
+  function handleDeleteClick(id: string) {
+    setTodos(todos => todos?.filter(todos => todos.id !== id))
+  }
+
   function handleAddNewTodo(title: string) {
     const newId = crypto.randomUUID().toString()
 
@@ -34,12 +38,13 @@ function App() {
 
   }
 
-
   return (
     <div className="min-h-screen min-w-[320px] flex items-center justify-center font-sans antialiased bg-[#fff]">
       <div className="max-w-screen-xl mx-auto p-8 text-center">
-        <div className="flex justify-center">
+        <div className="flex flex-col items-center w-[400px]">
+
           <AddTodo onAddTodo={handleAddNewTodo}></AddTodo>
+
           {todos?.map(todo => (
             <TodoCard
               key={todo.id}
@@ -48,6 +53,7 @@ function App() {
               completed={todo.completed}
               onToggleComplete={handleToggleComplete}
               onUpdateTitle={handleUpdateTitle}
+              onDelete={handleDeleteClick}
             >
             </TodoCard>
           ))}

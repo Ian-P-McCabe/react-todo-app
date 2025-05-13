@@ -27,7 +27,7 @@ const AddTodo: React.FC<AddTodoProps> = ({ onAddTodo }) => {
     };
 
     return (
-        <div className="flex w-full max-w-md mb-4 shadow-sm rounded-md overflow-hidden border border-gray-200">
+        <div className="flex w-full mb-4 shadow-sm rounded-md overflow-hidden border border-gray-200">
             <input
                 type="text"
                 className="flex-grow py-2 px-4 outline-none text-gray-700 placeholder-gray-400"
