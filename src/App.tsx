@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import TodoCard from './components/TodoCard'
-import testData from './assets/testtodo.json'
 import type { Todo } from './types/Todo';
 import AddTodo from './components/AddTodo';
 import TodoFooter from './components/TodoFooter';
@@ -10,10 +9,30 @@ function App() {
 
   const [todos, setTodos] = useState<Todo[]>([])
   const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all')
+  const [isInitialRender, setisInitialRender] = useState(true)
 
   useEffect(() => {
-    setTodos(testData);
+    const savedTodos = localStorage.getItem('todos');
+    if (savedTodos) {
+      try {
+        setTodos(JSON.parse(savedTodos));
+      } catch (error) {
+        console.error('Error parsing todos from localStorage: ', error)
+        setTodos([])
+      }
+    } else {
+      setTodos([])
+    }
   }, [])
+
+  useEffect(() => {
+    if (isInitialRender) {
+      setisInitialRender(false)
+      return
+    }
+    console.log('Updating local storage with ' + JSON.stringify(todos))
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]);
 
   function handleToggleComplete(id: string) {
     setTodos(todos => todos?.map(todo => todo.id === id ? { ...todo, completed: !todo.completed } : todo))
@@ -62,19 +81,25 @@ function App() {
           <AddTodo onAddTodo={handleAddNewTodo}></AddTodo>
 
           <div className='w-full h-[300px] overflow-y-auto border-2 border-gray-100 rounded-md'>
-            {filteredTodos.map(todo => (
-              <TodoCard
-                key={todo.id}
-                id={todo.id}
-                title={todo.title}
-                description={todo.description}
-                completed={todo.completed}
-                onToggleComplete={handleToggleComplete}
-                onUpdateTodo={handleUpdateTodo}
-                onDelete={handleDeleteClick}
-              >
-              </TodoCard>
-            ))}
+            {filteredTodos.length > 0 ? (
+              filteredTodos.map(todo => (
+                <TodoCard
+                  key={todo.id}
+                  id={todo.id}
+                  title={todo.title}
+                  description={todo.description}
+                  completed={todo.completed}
+                  onToggleComplete={handleToggleComplete}
+                  onUpdateTodo={handleUpdateTodo}
+                  onDelete={handleDeleteClick}
+                >
+                </TodoCard>
+              ))) : (
+              <div className="flex items-center justify-center h-full text-gray-400">
+                No {filter !== 'all' ? filter : ''} todos to display
+              </div>
+            )
+            }
           </div>
 
           <TodoFooter
