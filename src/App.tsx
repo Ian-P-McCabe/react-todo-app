@@ -9,6 +9,7 @@ function App() {
 
   const [todos, setTodos] = useState<Todo[]>([])
   const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all')
+  const [newTodoId, setNewTodoId] = useState<string | null>(null) // Track the ID of the newly added todo
   const [isInitialRender, setisInitialRender] = useState(true)
 
   useEffect(() => {
@@ -32,7 +33,16 @@ function App() {
     }
     console.log('Updating local storage with ' + JSON.stringify(todos))
     localStorage.setItem('todos', JSON.stringify(todos));
-  }, [todos]);
+  }, [todos, isInitialRender]);
+
+  useEffect(() => {
+    if (newTodoId) {
+      const timer = setTimeout(() => {
+        setNewTodoId(null);
+      }, 1000); // Clear after animation completes (a bit longer than animation duration)
+      return () => clearTimeout(timer);
+    }
+  }, [newTodoId]);
 
   function handleToggleComplete(id: string) {
     setTodos(todos => todos?.map(todo => todo.id === id ? { ...todo, completed: !todo.completed } : todo))
@@ -57,6 +67,7 @@ function App() {
       completed: false
     }
     setTodos(todos => [...todos, newTodo])
+    setNewTodoId(newId)
   }
 
   function handleFilterChange(newFilter: 'all' | 'active' | 'completed') {
@@ -92,6 +103,7 @@ function App() {
                   onToggleComplete={handleToggleComplete}
                   onUpdateTodo={handleUpdateTodo}
                   onDelete={handleDeleteClick}
+                  isNew={todo.id === newTodoId}
                 >
                 </TodoCard>
               ))) : (

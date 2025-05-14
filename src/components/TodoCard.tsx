@@ -1,14 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import type { TodoUpdate } from '../types/TodoUpdate';
+import type { Todo } from '../types/Todo';
 
-interface TodoCardProps {
-    id: string;
-    title: string;
-    description?: string;
-    completed: boolean;
+interface TodoCardProps extends Todo {
     onToggleComplete: (id: string) => void;
     onUpdateTodo: (id: string, updates: TodoUpdate) => void;
     onDelete: (id: string) => void;
+    isNew?: boolean;
 }
 
 const TodoCard: React.FC<TodoCardProps> = ({
@@ -19,14 +17,28 @@ const TodoCard: React.FC<TodoCardProps> = ({
     onToggleComplete,
     onUpdateTodo,
     onDelete,
+    isNew = false,
 }) => {
 
+    //State
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState(title);
     const [editedDescription, setEditedDescription] = useState(description)
     const [isHovering, setIsHovering] = useState(false);
+    const [animationComplete, setAnimationComplete] = useState(!isNew)
+    //Refs
     const titleInputRef = useRef<HTMLInputElement>(null);
     const descriptionInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (isNew) {
+            // Set animation as complete after duration
+            const timer = setTimeout(() => {
+                setAnimationComplete(true);
+            }, 500); // Match this with the CSS animation duration
+            return () => clearTimeout(timer);
+        }
+    }, [isNew]);
 
     useEffect(() => {
         if (isEditing && titleInputRef.current) {
@@ -113,8 +125,7 @@ const TodoCard: React.FC<TodoCardProps> = ({
 
     return (
         <div
-            className={`flex items-center p-3 rounded-md shadow-sm border border-gray-200 mb-2 cursor-pointer hover:bg-gray-50 transition-colors w-full ${completed ? 'bg-gray-50' : 'bg-white'
-                }`}
+            className={`flex items-center p-3 rounded-md shadow-sm border border-gray-200 mb-2 cursor-pointer hover:bg-gray-50 transition-colors w-full ${completed ? 'bg-gray-50' : 'bg-white'} ${!animationComplete ? 'animate-slide-in opacity-0' : ''}`}
             onClick={handleCardClick}
             onMouseOver={() => setIsHovering(true)}
             onMouseOut={() => setIsHovering(false)}
