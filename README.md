@@ -1,16 +1,3 @@
-1. Complete the project within one day (24 hours) from receiving this assignment
-2. Create a ZIP file of your project directory, excluding the `node_modules` folder
-3. Include a README.md with:
-
-   - Setup instructions
-   - Features implemented
-   - Any design decisions or trade-offs you made
-   - Challenges faced and how you overcame them
-   - What you would improve with more time
-
-4. Ensure the application is fully functional when following your setup instructions
-5. Submit the ZIP file via the provided submission method
-
 # 1 Setup
 
 1. Navigate to the root directory of this project 'my-todo-app'
