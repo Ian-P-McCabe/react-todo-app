@@ -4,7 +4,7 @@ import testData from './assets/testtodo.json'
 import type { Todo } from './types/Todo';
 import AddTodo from './components/AddTodo';
 import TodoFooter from './components/TodoFooter';
-
+import type { TodoUpdate } from './types/TodoUpdate';
 
 function App() {
 
@@ -19,19 +19,22 @@ function App() {
     setTodos(todos => todos?.map(todo => todo.id === id ? { ...todo, completed: !todo.completed } : todo))
   }
 
-  function handleUpdateTitle(id: string, newTitle: string) {
-    setTodos(todos => todos?.map(todo => todo.id === id ? { ...todo, title: newTitle } : todo))
+  function handleUpdateTodo(id: string, updates: TodoUpdate) {
+    setTodos(todos =>
+      todos?.map(todo =>
+        todo.id === id ? { ...todo, ...updates } : todo))
   }
 
   function handleDeleteClick(id: string) {
     setTodos(todos => todos?.filter(todos => todos.id !== id))
   }
 
-  function handleAddNewTodo(title: string) {
+  function handleAddNewTodo(title: string, description?: string) {
     const newId = crypto.randomUUID().toString()
     const newTodo: Todo = {
       id: newId,
       title: title,
+      description: description,
       completed: false
     }
     setTodos(todos => [...todos, newTodo])
@@ -58,18 +61,21 @@ function App() {
 
           <AddTodo onAddTodo={handleAddNewTodo}></AddTodo>
 
-          {filteredTodos.map(todo => (
-            <TodoCard
-              key={todo.id}
-              id={todo.id}
-              title={todo.title}
-              completed={todo.completed}
-              onToggleComplete={handleToggleComplete}
-              onUpdateTitle={handleUpdateTitle}
-              onDelete={handleDeleteClick}
-            >
-            </TodoCard>
-          ))}
+          <div className='w-full h-[300px] overflow-y-auto border-2 border-gray-100 rounded-md'>
+            {filteredTodos.map(todo => (
+              <TodoCard
+                key={todo.id}
+                id={todo.id}
+                title={todo.title}
+                description={todo.description}
+                completed={todo.completed}
+                onToggleComplete={handleToggleComplete}
+                onUpdateTodo={handleUpdateTodo}
+                onDelete={handleDeleteClick}
+              >
+              </TodoCard>
+            ))}
+          </div>
 
           <TodoFooter
             activeCount={todos.filter(todos => todos.completed === false).length}

@@ -2,21 +2,27 @@ import React, { useState } from 'react';
 import type { KeyboardEvent } from 'react';
 
 interface AddTodoProps {
-    onAddTodo: (title: string) => void;
+    onAddTodo: (title: string, description?: string) => void;
 }
 
 const AddTodo: React.FC<AddTodoProps> = ({ onAddTodo }) => {
-    const [inputValue, setInputValue] = useState('');
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(e.target.value);
+    const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setTitle(e.target.value);
     };
 
+    const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setDescription(e.target.value)
+    }
+
     const handleAddTodo = () => {
-        const trimmedValue = inputValue.trim();
+        const trimmedValue = title.trim();
         if (trimmedValue) {
-            onAddTodo(trimmedValue);
-            setInputValue(''); // Clear the input field after adding
+            onAddTodo(trimmedValue, description);
+            setTitle(''); // Clear the input field after adding
+            setDescription('');
         }
     };
 
@@ -28,14 +34,23 @@ const AddTodo: React.FC<AddTodoProps> = ({ onAddTodo }) => {
 
     return (
         <div className="flex w-full mb-4 shadow-sm rounded-md overflow-hidden border border-gray-200">
-            <input
-                type="text"
-                className="flex-grow py-2 px-4 outline-none text-gray-700 placeholder-gray-400"
-                placeholder="What do you need to do?"
-                value={inputValue}
-                onChange={handleInputChange}
-                onKeyDown={handleKeyDown}
-            />
+            <div className="flex flex-col w-full">
+                <input
+                    type="text"
+                    className="flex-grow py-2 px-4 pb-0 outline-none text-gray-700 placeholder-gray-400"
+                    placeholder="What do you need to do?"
+                    value={title}
+                    onChange={handleTitleChange}
+                    onKeyDown={handleKeyDown}
+                />
+                <input
+                    type="text"
+                    className="py-1 px-4 outline-none text-gray-700 placeholder-gray-400 text-xs"
+                    placeholder="Description (Optional)"
+                    value={description}
+                    onChange={handleDescriptionChange}
+                />
+            </div>
             <button
                 className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 transition-colors font-medium"
                 onClick={handleAddTodo}
