@@ -206,6 +206,7 @@ const TodoCard: React.FC<TodoCardProps> = ({
                         text-sm
                         px-1
                         py-0.5
+                        ml-3
                         dark:bg-red-500 dark:hover:bg-red-700 dark:focus:ring-red-900"
                     onClick={handleDeleteClick}
 
