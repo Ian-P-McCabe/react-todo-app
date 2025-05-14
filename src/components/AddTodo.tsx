@@ -36,6 +36,7 @@ const AddTodo: React.FC<AddTodoProps> = ({ onAddTodo }) => {
         <div className="flex w-full mb-4 shadow-sm rounded-md overflow-hidden border border-gray-200">
             <div className="flex flex-col w-full">
                 <input
+                    aria-label='Todo title'
                     type="text"
                     className="flex-grow py-2 px-4 pb-0 outline-none text-gray-700 placeholder-gray-400"
                     placeholder="What do you need to do?"
@@ -44,6 +45,7 @@ const AddTodo: React.FC<AddTodoProps> = ({ onAddTodo }) => {
                     onKeyDown={handleKeyDown}
                 />
                 <input
+                    aria-label='Todo description'
                     type="text"
                     className="py-1 px-4 outline-none text-gray-700 placeholder-gray-400 text-xs"
                     placeholder="Description (Optional)"
@@ -52,6 +54,7 @@ const AddTodo: React.FC<AddTodoProps> = ({ onAddTodo }) => {
                 />
             </div>
             <button
+                aria-label='Add todo'
                 className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 transition-colors font-medium"
                 onClick={handleAddTodo}
             >

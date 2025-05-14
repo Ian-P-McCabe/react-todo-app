@@ -124,7 +124,7 @@ const TodoCard: React.FC<TodoCardProps> = ({
     }
 
     return (
-        <div
+        <li
             className={`flex items-center p-3 rounded-md shadow-sm border border-gray-200 mb-2 cursor-pointer hover:bg-gray-50 transition-colors w-full ${completed ? 'bg-gray-50' : 'bg-white'} ${!animationComplete ? 'animate-slide-in opacity-0' : ''}`}
             onClick={handleCardClick}
             onMouseOver={() => setIsHovering(true)}
@@ -132,6 +132,7 @@ const TodoCard: React.FC<TodoCardProps> = ({
         >
             <div className="checkbox-container mr-3 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                 <div
+                    aria-label={`Mark ${title} as complete`}
                     className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${completed
                         ? 'bg-blue-500 border-blue-500'
                         : 'border-gray-300 hover:border-blue-400'
@@ -148,6 +149,7 @@ const TodoCard: React.FC<TodoCardProps> = ({
                 {isEditing ? (
                     <div>
                         <input
+                            aria-label='edit todo title'
                             ref={titleInputRef}
                             type="text"
                             className="w-full px-1 py-0.5 outline-none border-b border-blue-400 bg-transparent"
@@ -158,6 +160,7 @@ const TodoCard: React.FC<TodoCardProps> = ({
                             onClick={(e) => e.stopPropagation()}
                         />
                         <input
+                            aria-label='edit todo description'
                             ref={descriptionInputRef}
                             type="text"
                             className="w-full border-b border-blue-400 bg-transparent text-xs"
@@ -188,7 +191,9 @@ const TodoCard: React.FC<TodoCardProps> = ({
             </div>
 
             {isHovering &&
-                <button type="button"
+                <button
+                    aria-label={`Delete ${title}`}
+                    type="button"
                     className="
                         focus:outline-none 
                         text-white
@@ -203,12 +208,13 @@ const TodoCard: React.FC<TodoCardProps> = ({
                         py-0.5
                         dark:bg-red-500 dark:hover:bg-red-700 dark:focus:ring-red-900"
                     onClick={handleDeleteClick}
+
                 >
                     X
                 </button>
             }
 
-        </div>
+        </li>
     );
 };
 

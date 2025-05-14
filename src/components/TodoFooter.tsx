@@ -27,18 +27,21 @@ const TodoFooter: React.FC<TodoFooterProps> = ({
                 <button
                     className={`px-2 py-1 rounded ${filter === 'all' ? 'bg-blue-500 text-white' : 'text-gray-600 hover:text-gray-800'}`}
                     onClick={() => onFilterChange('all')}
+                    aria-current={`${filter === 'all' ? true : false}`}
                 >
                     All
                 </button>
                 <button
                     className={`px-2 py-1 rounded ${filter === 'active' ? 'bg-blue-500 text-white' : 'text-gray-600 hover:text-gray-800'}`}
                     onClick={() => onFilterChange('active')}
+                    aria-current={`${filter === 'active' ? true : false}`}
                 >
                     Active
                 </button>
                 <button
                     className={`px-2 py-1 rounded ${filter === 'completed' ? 'bg-blue-500 text-white' : 'text-gray-600 hover:text-gray-800'}`}
                     onClick={() => onFilterChange('completed')}
+                    aria-current={`${filter === 'completed' ? true : false}`}
                 >
                     Completed
                 </button>
@@ -49,6 +52,7 @@ const TodoFooter: React.FC<TodoFooterProps> = ({
                 className={`text-gray-600 hover:text-red-800 ${completedCount === 0 ? 'invisible' : ''}`}
                 onClick={onClearCompleted}
                 disabled={completedCount === 0}
+                aria-disabled={completedCount === 0}
             >
                 Clear Completed
             </button>

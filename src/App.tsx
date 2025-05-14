@@ -91,7 +91,7 @@ function App() {
 
           <AddTodo onAddTodo={handleAddNewTodo}></AddTodo>
 
-          <div className='w-full h-[300px] overflow-y-auto border-2 border-gray-100 rounded-md'>
+          <ul className='w-full h-[300px] overflow-y-auto border-2 border-gray-100 rounded-md'>
             {filteredTodos.length > 0 ? (
               filteredTodos.map(todo => (
                 <TodoCard
@@ -112,7 +112,7 @@ function App() {
               </div>
             )
             }
-          </div>
+          </ul>
 
           <TodoFooter
             activeCount={todos.filter(todos => todos.completed === false).length}
