@@ -47,7 +47,6 @@ const TodoFooter: React.FC<TodoFooterProps> = ({
         if (targetButton && filterContainerRef.current) {
             const buttonRect = targetButton.getBoundingClientRect();
             const containerRect = filterContainerRef.current.getBoundingClientRect();
-
             // Calculate position relative to the container
             const left = buttonRect.left - containerRect.left;
 
@@ -59,46 +58,14 @@ const TodoFooter: React.FC<TodoFooterProps> = ({
         }
     }, [filter]);
 
-    // Initial positioning after mount (needed for first render)
-    useEffect(() => {
-        // Small delay to ensure DOM is fully rendered
-        const timer = setTimeout(() => {
-            // Trigger the same logic as when filter changes
-            let targetButton: HTMLButtonElement | null = null;
-
-            if (filter === 'all') {
-                targetButton = allButtonRef.current;
-            } else if (filter === 'active') {
-                targetButton = activeButtonRef.current;
-            } else if (filter === 'completed') {
-                targetButton = completedButtonRef.current;
-            }
-
-            if (targetButton && filterContainerRef.current) {
-                const buttonRect = targetButton.getBoundingClientRect();
-                const containerRect = filterContainerRef.current.getBoundingClientRect();
-
-                const left = buttonRect.left - containerRect.left;
-
-                setHighlightStyle({
-                    left,
-                    width: buttonRect.width,
-                    opacity: 1,
-                });
-            }
-        }, 50);
-
-        return () => clearTimeout(timer);
-    }, [filter]);
-
     return (
         <div className="w-full flex items-center justify-between mt-4 py-2 px-4 text-sm border-t border-gray-200">
             {/* Items left counter */}
-            <div className="text-gray-600">
+            <div className="text-gray-600 w-24 flex-shrink-0 text-left">
                 {activeCount} {activeCount === 1 ? 'Item' : 'Items'} Left
             </div>
 
-            <div className="flex space-x-1 relative" ref={filterContainerRef}>
+            <div className="flex space-x-1 relative flex-shrink-0" ref={filterContainerRef}>
                 <div
                     className="absolute top-0 h-full bg-blue-500 rounded transition-all duration-300 ease-in-out"
                     style={{
@@ -136,15 +103,17 @@ const TodoFooter: React.FC<TodoFooterProps> = ({
             </div>
 
             {/* Clear completed button */}
-            <button
-                className={`text-gray-600 hover:text-red-800 ${completedCount === 0 ? 'invisible' : ''}`}
-                onClick={onClearCompleted}
-                disabled={completedCount === 0}
-                aria-disabled={completedCount === 0}
-                aria-label="Clear completed tasks"
-            >
-                Clear Completed
-            </button>
+            <div className="w-30 flex-shrink-0 text-right">
+                <button
+                    className={`text-gray-600 hover:text-red-800 ${completedCount === 0 ? 'invisible' : ''}`}
+                    onClick={onClearCompleted}
+                    disabled={completedCount === 0}
+                    aria-disabled={completedCount === 0}
+                    aria-label="Clear completed tasks"
+                >
+                    Clear Completed
+                </button>
+            </div>
         </div>
     );
 };
