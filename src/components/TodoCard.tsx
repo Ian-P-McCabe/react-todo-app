@@ -39,6 +39,7 @@ const TodoCard: React.FC<TodoCardProps> = ({
     }, [isNew]);
 
     useEffect(() => {
+        //TODO: Check this dependency array
         if (isEditing && titleInputRef.current && !isFadingOut) {
             titleInputRef.current.focus();
         }
