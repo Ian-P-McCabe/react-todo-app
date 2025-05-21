@@ -1,28 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import TodoCard from './components/TodoCard';
 import type { Todo } from './types/Todo';
 import AddTodo from './components/AddTodo';
 import TodoFooter from './components/TodoFooter';
 import type { TodoUpdate } from './types/TodoUpdate';
+import todoReducer from './reducers/TodoReducer';
 
 function App() {
-    const [todos, setTodos] = useState<Todo[]>([]);
+    const initialState: Todo[] = [];
+    const [newTodos, dispatch] = useReducer(todoReducer, initialState);
     const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all');
     const [newTodoId, setNewTodoId] = useState<string | null>(null); // Track the ID of the newly added todo
     const [isInitialRender, setIsInitialRender] = useState(true);
 
     useEffect(() => {
-        const savedTodos = localStorage.getItem('todos');
-        if (savedTodos) {
-            try {
-                setTodos(JSON.parse(savedTodos));
-            } catch (error) {
-                console.error('Error parsing todos from localStorage: ', error);
-                setTodos([]);
-            }
-        } else {
-            setTodos([]);
-        }
+        dispatch({
+            type: 'INIT',
+        });
     }, []);
 
     useEffect(() => {
@@ -30,41 +24,48 @@ function App() {
             setIsInitialRender(false);
             return;
         }
-        console.log('Updating local storage with ' + JSON.stringify(todos));
-        localStorage.setItem('todos', JSON.stringify(todos));
-    }, [todos, isInitialRender]);
+        console.log('Updating local storage with ' + JSON.stringify(newTodos));
+        localStorage.setItem('todos', JSON.stringify(newTodos));
+    }, [newTodos, isInitialRender]);
 
     useEffect(() => {
         if (newTodoId) {
             const timer = setTimeout(() => {
                 setNewTodoId(null);
-            }, 1000); // Clear after animation completes (a bit longer than animation duration)
+            }, 1000);
             return () => clearTimeout(timer);
         }
     }, [newTodoId]);
 
     function handleUpdateTodo(id: string, updates: TodoUpdate) {
-        console.log('Updating the todos');
-        setTodos(todos =>
-            todos?.map(todo =>
-                todo.id === id ? { ...todo, ...updates } : todo
-            )
-        );
+        dispatch({
+            type: 'UPDATE',
+            todoUpdate: {
+                id: id,
+                ...updates,
+            },
+        });
     }
 
     function handleDeleteClick(id: string) {
-        setTodos(todos => todos?.filter(todos => todos.id !== id));
+        dispatch({
+            type: 'DELETE',
+            todoUpdate: {
+                id: id,
+            },
+        });
     }
 
     function handleAddNewTodo(title: string, description?: string) {
         const newId = crypto.randomUUID().toString();
-        const newTodo: Todo = {
-            id: newId,
-            title: title,
-            description: description,
-            completed: false,
-        };
-        setTodos(todos => [...todos, newTodo]);
+        dispatch({
+            type: 'ADD',
+            todoUpdate: {
+                id: newId,
+                title: title,
+                description: description,
+            },
+        });
         setNewTodoId(newId);
     }
 
@@ -72,15 +73,17 @@ function App() {
         setFilter(newFilter);
     }
 
-    const filteredTodos = todos.filter(todo => {
+    function handleClearCompleted() {
+        dispatch({
+            type: 'CLEAR',
+        });
+    }
+
+    const filteredTodos = newTodos.filter(todo => {
         if (filter === 'active') return !todo.completed;
         if (filter === 'completed') return todo.completed;
         return true; // 'all' filter
     });
-
-    function handleClearCompleted() {
-        setTodos(todos => todos?.filter(todos => todos.completed !== true));
-    }
 
     return (
         <div className='min-h-screen min-w-[320px] flex items-center justify-center font-sans antialiased bg-[#fff]'>
@@ -111,7 +114,7 @@ function App() {
 
                     <TodoFooter
                         activeCount={
-                            todos.filter(todos => todos.completed === false)
+                            newTodos.filter(todos => todos.completed === false)
                                 .length
                         }
                         completedCount={3}
