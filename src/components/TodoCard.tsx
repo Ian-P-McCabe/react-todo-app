@@ -23,6 +23,7 @@ const TodoCard: React.FC<TodoCardProps> = ({
     const [editedDescription, setEditedDescription] = useState(description);
     const [isHovering, setIsHovering] = useState(false);
     const [animationComplete, setAnimationComplete] = useState(!isNew);
+    const [isFadingOut, setIsFadingOut] = useState(false);
     //Refs
     const titleInputRef = useRef<HTMLInputElement>(null);
     const descriptionInputRef = useRef<HTMLInputElement>(null);
@@ -38,14 +39,19 @@ const TodoCard: React.FC<TodoCardProps> = ({
     }, [isNew]);
 
     useEffect(() => {
-        if (isEditing && titleInputRef.current) {
+        if (isEditing && titleInputRef.current && !isFadingOut) {
             titleInputRef.current.focus();
         }
     }, [isEditing]);
 
     const handleCardClick = (e: React.MouseEvent) => {
+        console.log('Card Clicked');
         // Prevent entering edit mode when clicking the checkbox
-        if ((e.target as HTMLElement).closest('.checkbox-container')) {
+        if (
+            (e.target as HTMLElement).closest('.checkbox-container') ||
+            (e.target as HTMLElement).closest('.delete-button-class')
+        ) {
+            console.log('Detected delete button');
             return;
         }
         setIsEditing(true);
@@ -118,6 +124,7 @@ const TodoCard: React.FC<TodoCardProps> = ({
     };
 
     const handleToggleComplete = () => {
+        console.log('Complete clicked');
         const update: TodoUpdate = {};
         update.completed = !completed;
         onUpdateTodo(id, update);
@@ -125,14 +132,22 @@ const TodoCard: React.FC<TodoCardProps> = ({
     };
 
     const handleDeleteClick = () => {
-        onDelete(id);
+        console.log('Delete click');
+        setIsEditing(false);
+        setIsHovering(false);
+        setIsFadingOut(true);
+        setTimeout(() => {
+            onDelete(id);
+        }, 300);
     };
 
     return (
         <li
             className={`flex items-center p-3 rounded-md shadow-sm border border-gray-200 mb-2 cursor-pointer hover:bg-gray-50 transition-colors w-full ${
                 completed ? 'bg-gray-50' : 'bg-white'
-            } ${!animationComplete ? 'animate-slide-in opacity-0' : ''}`}
+            } ${!animationComplete ? 'animate-slide-in opacity-0' : ''} ${
+                isFadingOut ? 'fade-out' : ''
+            }`}
             onClick={handleCardClick}
             onMouseOver={() => setIsHovering(true)}
             onMouseOut={() => setIsHovering(false)}>
@@ -220,6 +235,7 @@ const TodoCard: React.FC<TodoCardProps> = ({
                     aria-label={`Delete ${title}`}
                     type='button'
                     className='
+                        delete-button-class
                         focus:outline-none 
                         text-white
                         bg-red-700
