@@ -29,8 +29,3 @@
 - Export the filter buttons to their own component, the animation has a bit of logic to it so the footer component would be cleaner if that logic was elsewhere
 - I would explore breaking up the TodoCard component into a couple of different components since it is quite meaty at the moment
 - I would also add some more animations and color to the application, some of the designs I drew from had pretty backgrounds as well
-
-
-Testing git push and pull
-
-One more line for testing
