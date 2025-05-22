@@ -12,11 +12,31 @@
     }
 }
 
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        max-height: 100px;
+        /* Adjust based on your typical todo height */
+        margin-bottom: 8px;
+        /* Match your mb-2 class */
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(-100%) scale(0.95);
+        max-height: 0;
+        margin-bottom: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
 .animate-slide-in {
     animation: slideIn 0.5s ease forwards;
 }
 
 .fade-out {
-    opacity: 0;
-    transition: opacity 0.3s ease-out;
+    animation: fadeOut 0.3s ease-in-out forwards;
+    overflow: hidden;
 }

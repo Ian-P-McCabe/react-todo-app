@@ -48,12 +48,13 @@ function App() {
     }
 
     function handleDeleteClick(id: string) {
-        dispatch({
-            type: 'DELETE',
-            todoUpdate: {
-                id: id,
-            },
-        });
+        setTimeout(() => {
+            dispatch({
+                type: 'DELETE',
+                todoUpdate: { id: id },
+            });
+        }, 0);
+
     }
 
     function handleAddNewTodo(title: string, description?: string) {
@@ -106,8 +107,7 @@ function App() {
                             ))
                         ) : (
                             <div className='flex items-center justify-center h-full text-gray-400'>
-                                No {filter !== 'all' ? filter : ''} todos to
-                                display
+                                No {filter !== 'all' ? filter : ''} todos to display
                             </div>
                         )}
                     </ul>
